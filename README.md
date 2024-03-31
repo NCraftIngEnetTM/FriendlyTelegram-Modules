@@ -1,1 +1,1 @@
-# FriendlyTelegramModule-NNcraftLogger
+Писал для себя так что мне все равно на колхоз ок
