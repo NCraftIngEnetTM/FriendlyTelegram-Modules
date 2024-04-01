@@ -99,7 +99,7 @@ class NNcraftLoggerMod(loader.Module):
             forward = self._db.get(self.strings["db_name"], "forwards")[settings["forward"]]
         except KeyError:
             return
-        if not settings["me"]:
+        if message.sender_id == self.me_id and not settings["me"]:
             return
         await message.forward_to(int(forward["id"]))
 
