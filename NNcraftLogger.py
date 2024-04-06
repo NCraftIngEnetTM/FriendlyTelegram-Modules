@@ -124,7 +124,7 @@ class NNcraftLoggerMod(loader.Module):
 
     async def listidscmd(self, message):
         ids = self._db.get(self.strings["db_name"], "ids")
-        text = "-"*20 + "\n"
+        text = "Список внесенных айди:\n" + "-"*20 + "\n"
         for id in ids.keys():
             try:
                 entity = await self.client.get_entity(int(id))
@@ -142,7 +142,7 @@ class NNcraftLoggerMod(loader.Module):
 
     async def listforwardscmd(self, message):
         forwards = self._db.get(self.strings["db_name"], "forwards")
-        text = "-"*20 + "\n"
+        text = "Список групп:\n" +  "-"*20 + "\n"
         for name in forwards.keys():
             text += f"{name}\n"
             text += f" — id: {forwards[name]['id']}\n"
