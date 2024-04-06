@@ -19,6 +19,7 @@ class NNcraftLoggerMod(loader.Module):
 
         ids = self._db.get(self.strings["db_name"], "ids")
         forward = self._db.get(self.strings["db_name"], "forwards")
+        
         if not ids.get(str(id)):
             if not forward.get(args[0]):
                 return
@@ -37,6 +38,62 @@ class NNcraftLoggerMod(loader.Module):
         await message.delete()
         id = utils.get_chat_id(message)
 
+        ids = self._db.get(self.strings["db_name"], "ids")
+        
+        try:
+            forward = self._db.get(self.strings["db_name"], "forwards")[ids[str(id)]["forward"]]
+        except KeyError:
+            return
+        
+        del ids[str(id)]
+        self._db.set(self.strings["db_name"], "ids", ids)
+
+
+        entity = await self.client.get_entity(id)
+        try:
+            name = entity.first_name
+        except AttributeError:
+            name = entity.title
+        await self.client.send_message(int(forward["id"]), f"{name}:{id} удален из логгера!")
+        
+    async def addlogcmd(self, message):
+        await message.delete()
+        args = list(utils.get_args_split_by(message, " "))
+
+        if not args:
+            return
+        if len(args) == 1:
+            args.append("default")
+            args.append(False)
+        if len(args) == 2:
+            args.append(False)
+
+        id = int(args[0])
+        ids = self._db.get(self.strings["db_name"], "ids")
+        forward = self._db.get(self.strings["db_name"], "forwards")
+        
+        if not ids.get(str(id)):
+            if not forward.get(args[1]):
+                return
+            
+            ids[str(id)] = {"forward": args[1], "me": args[2]}
+            self._db.set(self.strings["db_name"], "ids", ids)
+
+            entity = await self.client.get_entity(id)
+            try:
+                name = entity.first_name
+            except AttributeError:
+                name = entity.title
+            await self.client.send_message(int(forward[args[1]]["id"]), f"{name}:{id} добавлен в логгер!")
+    
+    async def dellogcmd(self, message):
+        await message.delete()
+        args = list(utils.get_args_split_by(message, " "))
+          
+        if not args:
+            return
+            
+        id = int(args[0])
         ids = self._db.get(self.strings["db_name"], "ids")
         try:
             forward = self._db.get(self.strings["db_name"], "forwards")[ids[str(id)]["forward"]]
@@ -164,4 +221,4 @@ class NNcraftLoggerMod(loader.Module):
         if not self._db.get(self.strings["db_name"], "ids"):
             self._db.set(self.strings["db_name"], "ids", {})
         if not self._db.get(self.strings["db_name"], "forwards"):
-            self._db.set(self.strings["db_name"], "forwards", {})
+            self._db.set(self.strings["db_name"], "forwards", {"default":{"id": self.me_id}})
