@@ -1,11 +1,5 @@
-import asyncio
-#import logging
-import json
-
 from telethon import types
 from .. import loader, utils
-
-#logger = logging.getLogger(__name__)
 
 @loader.tds
 class NNcraftLoggerMod(loader.Module):
