@@ -11,15 +11,15 @@ class NNcraftYandexGPTMod(loader.Module):
         id = utils.get_chat_id(message) 
         msgid = message.reply_to
         prompt = utils.get_args_raw(message)
-        system = None
+        assistant = None
         if msgid:
             msgid = msgid.reply_to_msg_id
-            system = (await self.client.get_messages(id, ids=msgid)).text
+            assistant = (await self.client.get_messages(id, ids=msgid)).text
 
         await message.edit(f"<b>YandexGPT (Pro) промпт</b>:\n{prompt}")
 
         wait = await message.reply("<b>Ваш промпт обрабатывается...</b>")
-        response = self.yagpt(prompt, system)
+        response = self.yagpt(prompt, assistant)
 
         splited = self.split_msg(f"**YandexGPT (Pro)**:\n{response}")
 
@@ -33,15 +33,15 @@ class NNcraftYandexGPTMod(loader.Module):
         id = utils.get_chat_id(message) 
         msgid = message.reply_to
         prompt = utils.get_args_raw(message)
-        system = None
+        assistant = None
         if msgid:
             msgid = msgid.reply_to_msg_id
-            system = (await self.client.get_messages(id, ids=msgid)).text
+            assistant = (await self.client.get_messages(id, ids=msgid)).text
             
         await message.edit(f"<b>YandexGPT (Lite) промпт</b>:\n{prompt}")
 
         wait = await message.reply("<b>Ваш промпт обрабатывается...</b>")
-        response = self.yagpt(prompt, system, model="yandexgpt-lite")
+        response = self.yagpt(prompt, assistant, model="yandexgpt-lite")
 
         splited = self.split_msg(f"**YandexGPT (Lite)**:\n{response}")
 
@@ -55,15 +55,15 @@ class NNcraftYandexGPTMod(loader.Module):
         id = utils.get_chat_id(message) 
         msgid = message.reply_to
         prompt = utils.get_args_raw(message)
-        system = None
+        assistant = None
         if msgid:
             msgid = msgid.reply_to_msg_id
-            system = (await self.client.get_messages(id, ids=msgid)).text
+            assistant = (await self.client.get_messages(id, ids=msgid)).text
             
         await message.edit(f"<b>YandexGPT (Краткий пересказ) промпт</b>:\n{prompt}")
 
         wait = await message.reply("<b>Ваш промпт обрабатывается...</b>")
-        response = self.yagpt(prompt, system, model="summarization")
+        response = self.yagpt(prompt, assistant, model="summarization")
 
         splited = self.split_msg(f"**YandexGPT (Краткий пересказ)**:\n{response}")
 
@@ -79,11 +79,13 @@ class NNcraftYandexGPTMod(loader.Module):
 
 
 
-    def yagpt(self, user: str, system:str = None, model: str = "yandexgpt", tokens: int = 2000, temperature: float = 0.3):
-        if not system:
-            messages = [{"role": "user","text": user}]
-        else:
-            messages = [{"role": "system","text": system},{"role": "user","text": user}]
+    def yagpt(self, user: str, assistant: str = None, system: str = None, model: str = "yandexgpt", tokens: int = 2000, temperature: float = 0.3):
+        messages = []
+        if system:
+            messages.append({"role": "system","text": system})
+        if assistant:
+            messages.append({"role": "assistant","text":assistant})
+        messages.append({"role": "user","text": user})
 
         id = ""
         api = ""
