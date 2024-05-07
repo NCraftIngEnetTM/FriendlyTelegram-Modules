@@ -30,7 +30,7 @@ class NNcraftYandexGPTMod(loader.Module):
         wait = await self.client.send_message(id, "<b>Ваш промпт обрабатывается...</b>", reply_to=idmsg)
         response = self.yagpt(prompt, model=model)
         await wait.delete()
-        splited = self.split_msg(f"<b>YandexGPT (Pro)</b>:\n{response}")
+        splited = self.split_msg(f"<b>YandexGPT (Lite)</b>:\n{response}")
 
         for i in splited:
             await self.client.send_message(id, i, reply_to=idmsg)
@@ -44,7 +44,7 @@ class NNcraftYandexGPTMod(loader.Module):
         wait = await self.client.send_message(id, "<b>Ваш промпт обрабатывается...</b>", reply_to=idmsg)
         response = self.yagpt(prompt, model=model)
         await wait.delete()
-        splited = self.split_msg(f"<b>YandexGPT (Pro)</b>:\n{response}")
+        splited = self.split_msg(f"<b>YandexGPT (Краткий пересказ)</b>:\n{response}")
 
         for i in splited:
             await self.client.send_message(id, i, reply_to=idmsg)
